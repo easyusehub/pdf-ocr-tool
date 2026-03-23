@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PDF OCR Tool</title>
+
+<meta name="description" content="PDF OCR Tool to extract text from scanned PDFs and images instantly. Free online PDF OCR tool with high accuracy. EasyUseHub OCR Tool.">
+
+<style>
+body{font-family:'Segoe UI';background:#f5f5f5;margin:0;padding:20px;text-align:center;}
+.container{max-width:700px;margin:auto;background:#fff;padding:20px;border-radius:12px;box-shadow:0 8px 25px rgba(0,0,0,0.1);}
+h2{color:#1e293b;}
+.upload{border:3px dashed #9333ea;padding:20px;border-radius:12px;cursor:pointer;color:#9333ea;font-weight:600;margin-bottom:10px;}
+.upload:hover{background:#f3e8ff;}
+textarea{width:100%;height:200px;margin-top:15px;padding:10px;border-radius:8px;border:1px solid #ccc;}
+button{padding:10px 15px;border:none;border-radius:8px;background:#9333ea;color:#fff;margin-top:10px;cursor:pointer;}
+button:hover{background:#7e22ce;}
+select{padding:8px;border-radius:6px;margin-top:10px;}
+.bottom-buttons{margin-top:15px;}
+.bottom-buttons a{margin:5px;padding:10px 15px;background:#1e293b;color:#fff;border-radius:8px;text-decoration:none;}
+.ad{margin:10px 0;padding:12px;border:2px dashed #ccc;border-radius:10px;color:#999;}
+#status{margin-top:10px;color:#555;}
+.note{font-size:0.85rem;color:#64748b;margin-top:10px;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>PDF OCR Tool</h2>
+<p>Extract text from scanned PDF or image instantly.</p>
+
+<div class="ad">Top Ad Placeholder</div>
+
+<div class="upload" onclick="fileInput.click()">📁 Upload PDF / Image</div>
+<input type="file" id="fileInput" accept="application/pdf,image/*" hidden>
+
+<select id="lang">
+<option value="eng">English</option>
+<option value="ben">Bangla</option>
+<option value="hin">Hindi</option>
+<option value="ara">Arabic</option>
+<option value="spa">Spanish</option>
+</select>
+
+<br>
+
+<button onclick="runOCR()">🔍 Start OCR</button>
+
+<p id="status">No file selected</p>
+
+<textarea id="output" placeholder="Extracted text will appear here..."></textarea>
+
+<button onclick="copyText()">📋 Copy Text</button>
+<button onclick="downloadTxt()">📥 Download TXT</button>
+
+<p class="note">
+Note: Best results with clear scanned PDFs. Complex layouts or tables may not be perfectly preserved.
+</p>
+
+<div class="bottom-buttons">
+<a href="https://easyusehub.blogspot.com/p/free-pdf-tools-easyusehub.html?m=1" target="_blank">📂 All PDF Tools</a>
+<a href="https://easyusehub.blogspot.com/?m=1" target="_blank">🏠 Home</a>
+</div>
+
+<div class="ad">Middle Ad Placeholder</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+
+<script>
+let file;
+
+const fileInput = document.getElementById('fileInput');
+
+fileInput.onchange = e=>{
+    file = e.target.files[0];
+    document.getElementById('status').textContent = "✔ Selected: " + file.name;
+};
+
+async function runOCR(){
+    if(!file) return alert('Upload file first');
+
+    const lang = document.getElementById('lang').value;
+    document.getElementById('status').textContent = '⏳ Processing OCR... Please wait';
+
+    let imageData;
+
+    try {
+
+        if(file.type === "application/pdf"){
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({data:arrayBuffer}).promise;
+            const page = await pdf.getPage(1);
+
+            const viewport = page.getViewport({scale:2});
+            const canvas = document.createElement('canvas');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            await page.render({canvasContext: canvas.getContext('2d'), viewport: viewport}).promise;
+
+            imageData = canvas.toDataURL();
+        } 
+        else {
+            imageData = file;
+        }
+
+        const { data: { text } } = await Tesseract.recognize(imageData, lang, { logger: m => {
+            if(m.status) document.getElementById('status').textContent = "🔄 " + m.status;
+        }});
+
+        document.getElementById('output').value = text;
+        document.getElementById('status').textContent = '✔ OCR Completed';
+
+    } catch (err) {
+        document.getElementById('status').textContent = '❌ Error processing file';
+        console.error(err);
+    }
+}
+
+function copyText(){
+    const txt = document.getElementById('output');
+    txt.select();
+    document.execCommand('copy');
+    alert('Copied!');
+}
+
+function downloadTxt(){
+    const text = document.getElementById('output').value;
+    if(!text) return alert('No text to download');
+
+    const blob = new Blob([text], {type:'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'ocr-text.txt';
+    a.click();
+}
+</script>
+
+</body>
+</html>
