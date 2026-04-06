@@ -2,143 +2,201 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>PDF OCR Tool</title>
-
-<meta name="description" content="PDF OCR Tool to extract text from scanned PDFs and images instantly. Free online PDF OCR tool with high accuracy. EasyUseHub OCR Tool.">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>PDF OCR Tool – EasyUseHub</title>
 <style>
-body{font-family:'Segoe UI';background:#f5f5f5;margin:0;padding:20px;text-align:center;}
-.container{max-width:700px;margin:auto;background:#fff;padding:20px;border-radius:12px;box-shadow:0 8px 25px rgba(0,0,0,0.1);}
-h2{color:#1e293b;}
-.upload{border:3px dashed #9333ea;padding:20px;border-radius:12px;cursor:pointer;color:#9333ea;font-weight:600;margin-bottom:10px;}
-.upload:hover{background:#f3e8ff;}
-textarea{width:100%;height:200px;margin-top:15px;padding:10px;border-radius:8px;border:1px solid #ccc;}
-button{padding:10px 15px;border:none;border-radius:8px;background:#9333ea;color:#fff;margin-top:10px;cursor:pointer;}
-button:hover{background:#7e22ce;}
-select{padding:8px;border-radius:6px;margin-top:10px;}
-.bottom-buttons{margin-top:15px;}
-.bottom-buttons a{margin:5px;padding:10px 15px;background:#1e293b;color:#fff;border-radius:8px;text-decoration:none;}
-.ad{margin:10px 0;padding:12px;border:2px dashed #ccc;border-radius:10px;color:#999;}
-#status{margin-top:10px;color:#555;}
-.note{font-size:0.85rem;color:#64748b;margin-top:10px;}
+:root { --primary: #9333ea; --bg: #f8fafc; }
+body, html { margin:0; padding:0; font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg); overflow-x: hidden; }
+
+header { background: linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; padding:20px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+header h1 { margin:0; font-size:1.6rem; }
+
+.container { width: 100%; max-width: 800px; margin:auto; padding:10px; box-sizing: border-box; text-align:center; }
+
+/* --- 🔥 Rakib235: Ad Bridges --- */
+.custom-ad-bridge {
+    background: linear-gradient(135deg, #1e3a8a, #2563eb);
+    color: white; padding: 15px; margin: 15px auto; border-radius: 12px; cursor: pointer;
+    width: 95%; max-width: 650px; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.25); display: inline-block; box-sizing: border-box; text-align: left;
+}
+.ad-title { font-size: 15px; font-weight: bold; display: block; margin-bottom: 4px; }
+.ad-desc { font-size: 11px; opacity: 0.9; display: block; margin-bottom: 8px; line-height: 1.4; }
+.ad-btn { background: #fbbf24; color: #000; padding: 5px 15px; border-radius: 5px; font-weight: bold; font-size: 10px; border:none; text-transform: uppercase; }
+
+/* --- 🔥 Rakib235: Push Ad with X --- */
+#push-notification {
+    position: fixed; bottom: -150px; right: 20px;
+    width: 85%; max-width: 300px; background: #fff; border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: flex; align-items: center; 
+    padding: 12px; z-index: 10000; transition: 0.6s; border-left: 5px solid var(--primary); text-align: left;
+}
+#push-notification.active { bottom: 20px; }
+#push-notification img { width: 35px; height: 35px; margin-right: 12px; border-radius: 6px; }
+.close-push { position: absolute; top: 5px; right: 10px; font-size: 18px; cursor: pointer; color: #bbb; font-weight: bold; }
+
+/* OCR UI Elements */
+#upload-box { border:3px dashed var(--primary); padding:30px; text-align:center; cursor:pointer; border-radius:12px; background:#fff; margin:15px 0; color: var(--primary); font-weight: bold; transition: 0.3s; }
+#upload-box:hover { background: #f3e8ff; }
+
+select { padding: 10px; border-radius: 8px; border: 1px solid #ddd; width: 100%; max-width: 300px; margin-bottom: 10px; font-weight: 600; }
+textarea { width: 100%; height: 180px; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-family: 'Segoe UI', sans-serif; box-sizing: border-box; margin: 15px 0; background: #fff; }
+
+.controls { display:flex; flex-wrap:wrap; justify-content:center; gap: 10px; margin: 10px 0; }
+.nav-btn { padding:12px 20px; border:none; border-radius:8px; background:var(--primary); color:#fff; cursor:pointer; font-weight: bold; font-size: 14px; transition: 0.3s; }
+.btn-dark { background: #1e293b; }
+.btn-success { background: #10b981; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+
+#status { margin-top: 10px; font-size: 14px; color: #555; font-weight: bold; min-height: 20px; }
+#toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#10b981; color:#fff; padding:10px 20px; border-radius:8px; display:none; z-index:9999; font-weight: bold; }
 </style>
 </head>
-
 <body>
 
+<div id="push-notification">
+    <span class="close-push" onclick="document.getElementById('push-notification').classList.remove('active');">&times;</span>
+    <div style="display:flex; align-items:center; width:100%;" onclick="window.open('https://easyusehub.blogspot.com', '_blank')">
+        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968313.png" alt="icon">
+        <div class="push-text">
+            <b style="font-size:13px; color:#333;">🚀 46+ Premium Free Tool Ready</b>
+            <p style="font-size:10px; color:#666; margin:0;">Fast & Secure Access at EasyUseHub.</p>
+        </div>
+    </div>
+</div>
+
+<header>
+    <h1>PDF OCR Tool</h1>
+    <p>Extract text from scanned PDF or images instantly with high accuracy.</p>
+</header>
+
 <div class="container">
-<h2>PDF OCR Tool</h2>
-<p>Extract text from scanned PDF or image instantly.</p>
+    <div class="custom-ad-bridge" onclick="window.open('https://easyusehub.blogspot.com', '_blank')">
+        <span class="ad-title">🚀 Try 46+ Premium Free Web Tools!</span>
+        <span class="ad-desc">Explore the best PDF editors, compressors and calculators for free on EasyUseHub.</span>
+        <button class="ad-btn">Open EasyUseHub</button>
+    </div>
 
-<div class="ad">Top Ad Placeholder</div>
+    <div id="upload-box" onclick="document.getElementById('fileInput').click()">📁 Click to Upload PDF or Image</div>
+    <input type="file" id="fileInput" accept="application/pdf,image/*" hidden>
 
-<div class="upload" onclick="fileInput.click()">📁 Upload PDF / Image</div>
-<input type="file" id="fileInput" accept="application/pdf,image/*" hidden>
+    <div id="status">Ready to process...</div>
 
-<select id="lang">
-<option value="eng">English</option>
-<option value="ben">Bangla</option>
-<option value="hin">Hindi</option>
-<option value="ara">Arabic</option>
-<option value="spa">Spanish</option>
-</select>
+    <select id="lang">
+        <option value="eng">English Language</option>
+        <option value="ben">Bangla Language</option>
+        <option value="hin">Hindi Language</option>
+        <option value="ara">Arabic Language</option>
+    </select>
 
-<br>
+    <div class="controls">
+        <button onclick="runOCR()" class="nav-btn btn-success" style="width: 100%; max-width: 300px;">🔍 Start OCR Processing</button>
+    </div>
 
-<button onclick="runOCR()">🔍 Start OCR</button>
+    <textarea id="output" placeholder="Extracted text will appear here..."></textarea>
 
-<p id="status">No file selected</p>
+    <div class="controls">
+        <button onclick="copyText()" class="nav-btn btn-dark">📋 Copy Text</button>
+        <button onclick="downloadTxt()" class="nav-btn btn-dark">📥 Download TXT</button>
+    </div>
 
-<textarea id="output" placeholder="Extracted text will appear here..."></textarea>
+    <div class="controls">
+        <button class="nav-btn btn-dark" onclick="window.location.href='https://easyusehub.blogspot.com/'">🏠 Home</button>
+        <button class="nav-btn btn-dark" onclick="window.location.href='https://easyusehub.blogspot.com/p/free-pdf-tools-online.html'">📂 All PDF Tools</button>
+    </div>
 
-<button onclick="copyText()">📋 Copy Text</button>
-<button onclick="downloadTxt()">📥 Download TXT</button>
+    <div class="custom-ad-bridge" style="background: linear-gradient(135deg, #7c3aed, #9333ea);" onclick="window.open('https://easyusehub.blogspot.com/p/ultimate-calculators-hub.html', '_blank')">
+        <span class="ad-title">🔢 Smart Online Calculators</span>
+        <span class="ad-desc">Calculate your Loan EMI, Age, and BMI instantly with our free smart tools.</span>
+        <button class="ad-btn" style="background:#fff; color:#7c3aed;">Try Now</button>
+    </div>
 
-<p class="note">
-Note: Best results with clear scanned PDFs. Complex layouts or tables may not be perfectly preserved.
-</p>
-
-<div class="bottom-buttons">
-<a href="https://easyusehub.blogspot.com/p/free-pdf-tools-online.html" target="_blank">📂 All PDF Tools</a>
-<a href="https://easyusehub.blogspot.com/?m=1" target="_blank">🏠 Home</a>
+    <div class="custom-ad-bridge" style="background: linear-gradient(135deg, #059669, #10b981);" onclick="window.open('https://easyusehub.blogspot.com/p/image-compressor.html', '_blank')">
+        <span class="ad-title">⚡ High-Speed Image Compressor</span>
+        <span class="ad-desc">Compress images without losing quality in seconds. Fast and secure.</span>
+        <button class="ad-btn" style="background:#fff; color:#059669;">Compress Now</button>
+    </div>
 </div>
 
-<div class="ad">Middle Ad Placeholder</div>
-
-</div>
+<div id="toast">✅ Action Successful!</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 
 <script>
 let file;
-
 const fileInput = document.getElementById('fileInput');
+const status = document.getElementById('status');
+const output = document.getElementById('output');
+const push = document.getElementById('push-notification');
 
-fileInput.onchange = e=>{
+fileInput.onchange = e => {
     file = e.target.files[0];
-    document.getElementById('status').textContent = "✔ Selected: " + file.name;
+    if(file) {
+        status.textContent = "✔ Selected: " + file.name;
+        push.classList.add('active');
+    }
 };
 
-async function runOCR(){
-    if(!file) return alert('Upload file first');
-
+async function runOCR() {
+    if(!file) return alert('Please upload a file first!');
+    
     const lang = document.getElementById('lang').value;
-    document.getElementById('status').textContent = '⏳ Processing OCR... Please wait';
-
-    let imageData;
+    status.innerHTML = '⏳ Processing OCR... Please wait';
+    output.value = "";
 
     try {
-
-        if(file.type === "application/pdf"){
+        let imageData;
+        if(file.type === "application/pdf") {
             const arrayBuffer = await file.arrayBuffer();
             const pdf = await pdfjsLib.getDocument({data:arrayBuffer}).promise;
             const page = await pdf.getPage(1);
-
             const viewport = page.getViewport({scale:2});
             const canvas = document.createElement('canvas');
             canvas.width = viewport.width;
             canvas.height = viewport.height;
-
             await page.render({canvasContext: canvas.getContext('2d'), viewport: viewport}).promise;
-
             imageData = canvas.toDataURL();
-        } 
-        else {
+        } else {
             imageData = file;
         }
 
-        const { data: { text } } = await Tesseract.recognize(imageData, lang, { logger: m => {
-            if(m.status) document.getElementById('status').textContent = "🔄 " + m.status;
-        }});
+        const worker = await Tesseract.createWorker({
+            logger: m => { if(m.status === 'recognizing text') status.textContent = `🔄 Progress: ${Math.round(m.progress * 100)}%`; }
+        });
 
-        document.getElementById('output').value = text;
-        document.getElementById('status').textContent = '✔ OCR Completed';
+        await worker.loadLanguage(lang);
+        await worker.initialize(lang);
+        const { data: { text } } = await worker.recognize(imageData);
+        
+        output.value = text;
+        status.textContent = '✔ OCR Completed Successfully!';
+        await worker.terminate();
 
     } catch (err) {
-        document.getElementById('status').textContent = '❌ Error processing file';
+        status.textContent = '❌ Error processing file!';
         console.error(err);
     }
 }
 
-function copyText(){
-    const txt = document.getElementById('output');
-    txt.select();
+function copyText() {
+    output.select();
     document.execCommand('copy');
-    alert('Copied!');
+    showToast('✅ Text Copied to Clipboard!');
 }
 
-function downloadTxt(){
-    const text = document.getElementById('output').value;
-    if(!text) return alert('No text to download');
-
-    const blob = new Blob([text], {type:'text/plain'});
+function downloadTxt() {
+    if(!output.value) return alert('Nothing to download!');
+    const blob = new Blob([output.value], {type:'text/plain'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'ocr-text.txt';
+    a.download = 'EasyUseHub_OCR.txt';
     a.click();
+}
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.style.display = 'block';
+    setTimeout(() => toast.style.display = 'none', 3000);
 }
 </script>
 
