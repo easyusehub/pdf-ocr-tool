@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>PDF OCR Tool – EasyUseHub</title>
+<meta name="description" content="Extract text from scanned PDFs and images in multiple languages including English, Bangla, Russian, and Chinese.">
+
 <style>
 :root { --primary: #9333ea; --bg: #f8fafc; }
 body, html { margin:0; padding:0; font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg); overflow-x: hidden; }
@@ -31,20 +33,19 @@ header h1 { margin:0; font-size:1.6rem; }
     padding: 12px; z-index: 10000; transition: 0.6s; border-left: 5px solid var(--primary); text-align: left;
 }
 #push-notification.active { bottom: 20px; }
-#push-notification img { width: 35px; height: 35px; margin-right: 12px; border-radius: 6px; }
 .close-push { position: absolute; top: 5px; right: 10px; font-size: 18px; cursor: pointer; color: #bbb; font-weight: bold; }
 
 /* OCR UI Elements */
 #upload-box { border:3px dashed var(--primary); padding:30px; text-align:center; cursor:pointer; border-radius:12px; background:#fff; margin:15px 0; color: var(--primary); font-weight: bold; transition: 0.3s; }
 #upload-box:hover { background: #f3e8ff; }
 
-select { padding: 10px; border-radius: 8px; border: 1px solid #ddd; width: 100%; max-width: 300px; margin-bottom: 10px; font-weight: 600; }
+select { padding: 12px; border-radius: 8px; border: 1px solid #ddd; width: 100%; max-width: 350px; margin-bottom: 10px; font-weight: 600; background: #fff; }
 textarea { width: 100%; height: 180px; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-family: 'Segoe UI', sans-serif; box-sizing: border-box; margin: 15px 0; background: #fff; }
 
 .controls { display:flex; flex-wrap:wrap; justify-content:center; gap: 10px; margin: 10px 0; }
 .nav-btn { padding:12px 20px; border:none; border-radius:8px; background:var(--primary); color:#fff; cursor:pointer; font-weight: bold; font-size: 14px; transition: 0.3s; }
 .btn-dark { background: #1e293b; }
-.btn-success { background: #10b981; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+.btn-success { background: #10b981; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); width: 100%; max-width: 300px; font-size: 16px; }
 
 #status { margin-top: 10px; font-size: 14px; color: #555; font-weight: bold; min-height: 20px; }
 #toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#10b981; color:#fff; padding:10px 20px; border-radius:8px; display:none; z-index:9999; font-weight: bold; }
@@ -55,7 +56,7 @@ textarea { width: 100%; height: 180px; padding: 12px; border: 1px solid #ddd; bo
 <div id="push-notification">
     <span class="close-push" onclick="document.getElementById('push-notification').classList.remove('active');">&times;</span>
     <div style="display:flex; align-items:center; width:100%;" onclick="window.open('https://easyusehub.blogspot.com', '_blank')">
-        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968313.png" alt="icon">
+        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968313.png" alt="icon" style="width:35px; height:35px; margin-right:12px;">
         <div class="push-text">
             <b style="font-size:13px; color:#333;">🚀 46+ Premium Free Tool Ready</b>
             <p style="font-size:10px; color:#666; margin:0;">Fast & Secure Access at EasyUseHub.</p>
@@ -65,10 +66,11 @@ textarea { width: 100%; height: 180px; padding: 12px; border: 1px solid #ddd; bo
 
 <header>
     <h1>PDF OCR Tool</h1>
-    <p>Extract text from scanned PDF or images instantly with high accuracy.</p>
+    <p>Convert scanned PDF or images into editable text instantly.</p>
 </header>
 
 <div class="container">
+    
     <div class="custom-ad-bridge" onclick="window.open('https://easyusehub.blogspot.com', '_blank')">
         <span class="ad-title">🚀 Try 46+ Premium Free Web Tools!</span>
         <span class="ad-desc">Explore the best PDF editors, compressors and calculators for free on EasyUseHub.</span>
@@ -78,17 +80,23 @@ textarea { width: 100%; height: 180px; padding: 12px; border: 1px solid #ddd; bo
     <div id="upload-box" onclick="document.getElementById('fileInput').click()">📁 Click to Upload PDF or Image</div>
     <input type="file" id="fileInput" accept="application/pdf,image/*" hidden>
 
-    <div id="status">Ready to process...</div>
+    <div id="status">Ready to scan...</div>
 
     <select id="lang">
         <option value="eng">English Language</option>
         <option value="ben">Bangla Language</option>
         <option value="hin">Hindi Language</option>
+        <option value="rus">Russian (Русский)</option>
+        <option value="chi_sim">Chinese Simplified (简体中文)</option>
+        <option value="chi_tra">Chinese Traditional (繁體中文)</option>
         <option value="ara">Arabic Language</option>
+        <option value="fra">French Language</option>
+        <option value="deu">German Language</option>
+        <option value="spa">Spanish Language</option>
     </select>
 
     <div class="controls">
-        <button onclick="runOCR()" class="nav-btn btn-success" style="width: 100%; max-width: 300px;">🔍 Start OCR Processing</button>
+        <button onclick="runOCR()" class="nav-btn btn-success">🔍 Start OCR Processing</button>
     </div>
 
     <textarea id="output" placeholder="Extracted text will appear here..."></textarea>
@@ -116,7 +124,7 @@ textarea { width: 100%; height: 180px; padding: 12px; border: 1px solid #ddd; bo
     </div>
 </div>
 
-<div id="toast">✅ Action Successful!</div>
+<div id="toast">✅ Text Copied!</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
@@ -138,9 +146,8 @@ fileInput.onchange = e => {
 
 async function runOCR() {
     if(!file) return alert('Please upload a file first!');
-    
     const lang = document.getElementById('lang').value;
-    status.innerHTML = '⏳ Processing OCR... Please wait';
+    status.innerHTML = '⏳ Loading OCR Engine...';
     output.value = "";
 
     try {
@@ -160,17 +167,19 @@ async function runOCR() {
         }
 
         const worker = await Tesseract.createWorker({
-            logger: m => { if(m.status === 'recognizing text') status.textContent = `🔄 Progress: ${Math.round(m.progress * 100)}%`; }
+            logger: m => { 
+                if(m.status === 'recognizing text') {
+                    status.textContent = `🔄 Progress: ${Math.round(m.progress * 100)}%`;
+                }
+            }
         });
 
         await worker.loadLanguage(lang);
         await worker.initialize(lang);
         const { data: { text } } = await worker.recognize(imageData);
-        
         output.value = text;
         status.textContent = '✔ OCR Completed Successfully!';
         await worker.terminate();
-
     } catch (err) {
         status.textContent = '❌ Error processing file!';
         console.error(err);
@@ -180,7 +189,9 @@ async function runOCR() {
 function copyText() {
     output.select();
     document.execCommand('copy');
-    showToast('✅ Text Copied to Clipboard!');
+    const toast = document.getElementById('toast');
+    toast.style.display = 'block';
+    setTimeout(() => toast.style.display = 'none', 3000);
 }
 
 function downloadTxt() {
@@ -191,14 +202,6 @@ function downloadTxt() {
     a.download = 'EasyUseHub_OCR.txt';
     a.click();
 }
-
-function showToast(msg) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.style.display = 'block';
-    setTimeout(() => toast.style.display = 'none', 3000);
-}
 </script>
-
 </body>
 </html>
